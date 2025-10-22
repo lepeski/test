@@ -42,11 +42,11 @@ public final class ShopBlockPlugin extends JavaPlugin implements Listener {
         }
         this.shopBlockKey = new NamespacedKey(this, "shop-block");
         ShopStorage storage = new ShopStorage(getDataFolder().toPath().resolve("shops.yml"));
+        this.shopManager = new ShopManager(this, storage);
         try {
-            this.shopManager = new ShopManager(this, storage);
+            this.shopManager.load();
         } catch (IOException | InvalidConfigurationException e) {
             getLogger().severe("Failed to load shop data: " + e.getMessage());
-            this.shopManager = new ShopManager(this, storage);
         }
 
         getServer().getPluginManager().registerEvents(this, this);

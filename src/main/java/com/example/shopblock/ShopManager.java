@@ -4,6 +4,7 @@ import com.example.shopblock.storage.ShopStorage;
 import org.bukkit.block.Block;
 
 import java.io.IOException;
+import org.bukkit.configuration.InvalidConfigurationException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -14,9 +15,13 @@ public final class ShopManager {
     private final ShopStorage storage;
     private final Map<ShopPosition, ShopData> shops = new HashMap<>();
 
-    public ShopManager(ShopBlockPlugin plugin, ShopStorage storage) throws IOException {
+    public ShopManager(ShopBlockPlugin plugin, ShopStorage storage) {
         this.plugin = plugin;
         this.storage = storage;
+    }
+
+    public void load() throws IOException, InvalidConfigurationException {
+        this.shops.clear();
         this.shops.putAll(storage.load(plugin.getServer()));
     }
 
