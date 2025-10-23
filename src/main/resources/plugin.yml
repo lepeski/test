@@ -1,0 +1,17 @@
+name: ShopBlock
+main: com.example.shopblock.ShopBlockPlugin
+version: 1.0.0
+author: OpenAI
+api-version: 1.20
+commands:
+  shopblock:
+    description: Administer player shop blocks
+    usage: /shopblock give [player]
+    permission: shopblock.admin
+permissions:
+  shopblock.admin:
+    description: Allows managing shop blocks
+    default: op
+  shopblock.admin.break:
+    description: Allows breaking other players' shop blocks
+    default: op
