@@ -175,13 +175,6 @@ public final class ShopBlockPlugin extends JavaPlugin implements Listener {
 
         ShopData shop = optionalShop.get();
         Player player = event.getPlayer();
-        boolean isOwner = shop.getOwner().equals(player.getUniqueId());
-        if (!isOwner && !player.hasPermission("shopblock.admin.break")) {
-            player.sendMessage(ChatColor.RED + "Only the owner can break this shop block.");
-            event.setCancelled(true);
-            return;
-        }
-
         event.setDropItems(false);
         shopManager.removeShop(block);
         player.getWorld().dropItemNaturally(block.getLocation().add(0.5, 0.5, 0.5), createShopItem());
