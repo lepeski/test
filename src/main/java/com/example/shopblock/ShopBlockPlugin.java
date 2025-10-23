@@ -4,6 +4,7 @@ import com.example.shopblock.gui.ShopBuyMenu;
 import com.example.shopblock.gui.ShopEditorMenu;
 import com.example.shopblock.storage.ShopStorage;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
@@ -13,6 +14,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -177,8 +179,9 @@ public final class ShopBlockPlugin extends JavaPlugin implements Listener {
         Player player = event.getPlayer();
         event.setDropItems(false);
         shopManager.removeShop(block);
-        player.getWorld().dropItemNaturally(block.getLocation().add(0.5, 0.5, 0.5), createShopItem());
-        shop.dropContents(block.getLocation());
+        Location dropLocation = block.getLocation().add(0.5, 0.5, 0.5);
+        player.getWorld().dropItemNaturally(dropLocation, createShopItem());
+        shop.dropContents(dropLocation);
         try {
             shopManager.save();
         } catch (IOException e) {
@@ -189,6 +192,9 @@ public final class ShopBlockPlugin extends JavaPlugin implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getHand() != EquipmentSlot.HAND) {
+            return;
+        }
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
             return;
         }
         Block block = event.getClickedBlock();

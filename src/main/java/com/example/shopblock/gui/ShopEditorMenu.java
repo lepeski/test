@@ -177,6 +177,8 @@ public final class ShopEditorMenu implements InventoryHolder {
             return;
         }
 
+        int templateAmount = Math.max(1, productTemplate.getAmount());
+
         if (productInput != null) {
             inventory.setItem(PRODUCT_SLOT, null);
         }
@@ -206,18 +208,29 @@ public final class ShopEditorMenu implements InventoryHolder {
         }
 
         int addedStock = 0;
+        if (productInput != null) {
+            int provided = productInput.getAmount();
+            if (provided >= templateAmount) {
+                addedStock += provided / templateAmount;
+                int remainder = provided % templateAmount;
+                if (remainder > 0) {
+                    ItemStack leftover = productInput.clone();
+                    leftover.setAmount(remainder);
+                    InventoryUtils.giveOrDrop(player, leftover);
+                }
+            }
+        }
         if (deposit != null && deposit.getType() != Material.AIR) {
             if (!deposit.isSimilar(productTemplate)) {
                 player.sendMessage(ChatColor.RED + "Stock items must match the product sample.");
                 return;
             }
-            int templateAmount = Math.max(1, productTemplate.getAmount());
             int depositAmount = deposit.getAmount();
             if (depositAmount < templateAmount) {
                 player.sendMessage(ChatColor.RED + "Deposit at least " + templateAmount + " items for one sale.");
                 return;
             }
-            addedStock = depositAmount / templateAmount;
+            addedStock += depositAmount / templateAmount;
             int remainder = depositAmount % templateAmount;
             inventory.setItem(STOCK_SLOT, null);
             if (remainder > 0) {
